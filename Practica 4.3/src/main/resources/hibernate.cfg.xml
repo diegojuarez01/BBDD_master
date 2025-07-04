@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+		<!-- Database connection properties - Driver, URL, user, password -->
+		<property name="hibernate.connection.driver_class">net.sourceforge.jtds.jdbc.Driver</property>
+		<property name="hibernate.connection.url">jdbc:jtds:sqlserver://localhost/P501</property>
+		<property name="hibernate.connection.username">use1</property>
+		<property name="hibernate.connection.password">pwd1</property>
+		<!-- Connection Pool Size -->
+		<property name="hibernate.connection.pool_size">1</property>
+		
+		<!-- org.hibernate.HibernateException: No CurrentSessionContext configured! -->
+		<property name="hibernate.current_session_context_class">thread</property>
+		
+		<!-- Outputs the SQL queries, should be disabled in Production -->
+		<property name="hibernate.show_sql">true</property>
+		
+		<!-- activa la opción para mostrar las estadísticas de tiempo -->
+		<property name="hibernate.generate_statistics">true</property>
+		
+		<!-- Dialect is required to let Hibernate know the Database Type, MySQL, Oracle etc
+			Hibernate 4 automatically figure out Dialect from Database Connection Metadata -->
+		<property name="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</property>
+			
+         <!-- activando la caché de segundo nivel -->
+         <property name="hibernate.cache.use_second_level_cache">false</property>
+         <!-- definiendo EHCache como el gestor de la caché de segundo nivel -->
+         <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</property>
+         <!-- especificando el fichero de configuración de la caché -->
+	
+        <property name="net.sf.ehcache.configurationResourceName">/ehcache.xml</property>
+          
+          
+        <property name = "hibernate.jdbc.batch_size">1000</property>
+		<property name = "hibernate.order_inserts">true</property>
+		<property name = "hibernate.order_updates">true</property>
+  
+		<mapping class="es.ua.eps.cursohibernate.model.Usuario"/>  
+	    <mapping class="es.ua.eps.cursohibernate.model.Perfil"/>  
+	    <mapping class="es.ua.eps.cursohibernate.model.InformacionPublica"/>  
+	    <mapping class="es.ua.eps.cursohibernate.model.Conexion"/>  
+		
+	</session-factory>
+</hibernate-configuration>

@@ -1,0 +1,11 @@
+
+create table #onp (orden int,nombre varchar(50),apellidos varchar(75))
+
+select row_number() over(order by nombre) orden, nombre , apellido INTO #onpxx from  #nombre n ,#apellido ;
+
+select * from #onpx
+
+INSERT INTO #onpx select row_number() over(order by nombre) orden, nombre, a1.apellido + ' ' + a2.apellido from  #nombre n ,#apellido a1, #apellido a2;
+
+select row_number() over(order by nombre) orden, nombre, a1.apellido + ' ' + a2.apellido from  #nombre n ,#apellido a1, #apellido a2
+

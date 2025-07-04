@@ -1,0 +1,142 @@
+	Ejercicio T1a
+
+¿Qué ha ocurrido?
+
+SET XACT_ABORT OFF --Ignora los errores y sigue con la transaccion si esta en OFF
+insert into trantest2 values (20,20); esta linea ha dado error por lo que no se ha insertado esta linea en la table transet2
+pero no se ha parado la ejeccucion por la linea SET XACT_ABORT OFF
+
+	Ejercicio T1b
+
+¿Y ahora? ¿Se ha insertado algo? ¿Qué ha cambiado?
+
+Ahora tenemos esta linea en ON SET XACT_ABORT ON por lo que ya no ignora los errores. Si una instrucción Transact-SQL
+genera un error en tiempo de ejecución se termina toda la transacción y se revierte. Habia insertado la primera linea pero al llegar a la segunda linea
+y dar error se termina toda la transacción y se revierte.
+
+		Control de errores
+
+3. ¿Qué ha ocurrido?
+
+Se ha producido el mismo error que aparecia anteriormente, aunque ahora lo hemos capturado con try catch, ademas hemos guardado la informacion de este error 
+y la hemos mostrado por pantalla, ademas hemos hecho un rollback si la transaccion seguia activa para volver atras y evitar el error. Por ultimo se muestra la
+tabla transet2 y se comprueba que esta vacia ya que finalmente no se ha commiteado ningun insert.
+
+4. ¿Qué ha ocurrido?
+
+Al utilizar transacciones implicitas, la transaccion despues de cada ejecucion se bloquea a la espera de la siguiente ejeccucion o de un commiteado
+por lo que en el primer bloque se ejecuta el primer insert y el segundo se queda bloqueado.
+Al ejecutar el primer bloque de la derecha se quedara esperando que acabe la primera transaccion ya que esta en lectura y la primera transaccion se encuentra
+bloqueada.
+Al ejecutar el segundo bloque de la izquierda se desbloquea la transaccion ya que se ejecuta un nuevo insert y para terminar un commit del tercer insert terminando de
+esta manera la primera transaccion.
+Para el ultimo bloque se ejecutan todas lineas ya que no espera ningun tipo de confirmacion y acaba la transaccion 2.
+
+
+	Interbloqueos
+	
+5. Revisa los mensajes de error para saber qué ha pasado.		???????????????
+
+Se ejecutaron los dos bloques al mismo tiempo, pero solo se llego a actualizar la primera columna de la primera transaccion ya que la primera 
+transaccion se quedo esperando 5 segundos para ejecutar el siguiente update 
+
+
+	Ejercicio T2a1
+	
+6. ¿Quién espera a quién? (nadie/la consulta A/la consulta B)
+
+Nadie.
+
+7. ¿Qué resultados obtienen las select de la consulta B y por qué?
+
+	Se obtiene el insert que se ha realizado en la consulta A a la tabla trantest ya que se hace un select sobre trantest antes de que la consulta 
+	A haga el rollback y se reviertan todos los datos introducidos en la consulta A/la
+
+
+	Ejercicio T2a1B
+	
+8. ¿Quién espera a quién? (nadie/la consulta A/la consulta B)
+
+
+
+9. ¿Qué resultados obtiene la consulta final de la consulta A y por qué?
+	
+	
+	Ejercicio T2a2
+	
+	
+10. ¿Quién espera a quién? (nadie/la consulta A/la consulta B)
+	
+	La consulta B se queda esperando a la consulta A.
+	
+11. ¿Qué resultados obtienen las select de la consulta B y por qué?
+
+	Se obtiene vacio, no detecta ningun cambio de los que intento realizar la consulta A ya que hizo un rollback y reviertio todos los cambios realizados
+
+
+	
+	Ejercicio T2b
+
+
+12. ¿Quién ha esperado por quién? (nadie/la consulta A/la consulta B)
+
+	La consulta B se queda esperando a la consulta A.
+
+13. ¿Es el resultado de "select 1" igual al de "select 2"?
+
+	Si, es el mismo resultado ya que el update de la consulta B se ejecuta finalmente despues del commit del select 2, ahi es donde cambian los valores
+	de la tabla.
+
+14. ¿Es diferente el resultado de "select fin?
+
+	Si es diferente ya que como he comentado en la respuesta anterior, el valor de la tabla ya ha cambiado cuando llega a esta instrucción 
+	debido al update de la consulta B.
+
+15. Prueba a realizar el mismo ejercicio pero, en la consulta B, con "update trantest set col2=1 where col2=0;";
+¿qué pasa?
+
+	No, se actualiza ningun registro de la tabla ya que ninguno cumple el where col2=0.
+
+16. Prueba a realizar el mismo ejercicio pero, en la consulta B, con "update trantest set col2=1;"; ¿qué pasa?
+
+	Se produce un error de interbloqueo por lo q no se muestran los datos de la tabla, pero los valores si que cambian ya que el error se produce en la
+	consulta A al hacer el primer select donde esta intentando acceder al dato WHERE Col2 = 2 pero como este ha sido modificado por la consulta B se produce 
+	el error.
+	
+	
+	Ejercicio T2c
+	
+	
+17. ¿Quién ha esperado por quién? (nadie/la consulta A/la consulta B)
+
+	Nadie.
+
+18. ¿Es el resultado de "select 1" igual al de "select 2"?
+
+	No, el select2 se queda vacio ya que se ejecuta el update de la consulta B antes que el select2, cambiando los valores de la tabla.
+
+19. ¿Es diferente el resultado de "select fin"?
+
+	El select fin, se muestran los resultados de la tabla con el update realizado en la consulta B 
+
+20. ¿Qué diferencia hay entonces entre las transacciones de la consulta A en este ejercicio y el anterior?
+		
+		
+	Ejercicio T2C2
+
+
+21. ¿Quién ha esperado por quién? (nadie/la consulta A/la consulta B)
+
+	La consulta A ha estado esperando a la consulta B.
+
+22. ¿Es el resultado de "select 1" igual al de "select 2"?
+
+	Si.
+
+23. ¿Es diferente el resultado de "select fin"?	
+		
+	No, el resultado es el mismo pero muestra los datos ya que no tiene la restriccion del where que hacia que los anteriores select no mostraran
+	ningun resultado.
+	
+	
+
